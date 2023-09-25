@@ -35,16 +35,47 @@ def calculate_velocity(df, pid_controller):
     return velocities
 
 
+def calculate_omega(df):
+    omegas = []
+    for i in range(1, len(df)):
+        angle1 = df.iloc[i - 1]['Yaw']
+        angle2 = df.iloc[i]['Yaw']
+
+        # Calculate velocity between two points
+        omega = angle2 - angle1
+        omegas.append(omega)
+
+    return omegas
+
+
+def printlines(list, start_line, end_line):
+    for i, item in enumerate(list):
+        if end_line > i > start_line:
+            print(item)
+
+
 # Example usage
 import pandas as pd
 import os
 
-file_path = os.path.join('Data', 'First_Set_for_imitation_Learning', 'data_8_clockwise', 'vehicle_waypoint.csv')
-track_file = pd.read_csv(file_path)
-print(track_file.columns)
+print(os.getcwd())
+dir_path = os.path.join('Data', 'First_Set_for_imitation_Learning', 'interpolated_8_clockwise')
+result_path = os.path.join('Data', 'First_Set_for_imitation_Learning', 'results')
 
 pid = PID(1, 0, 0)  # Just example values; tune them according to your needs
-velocities = calculate_velocity(track_file, pid)
 
-for velocity in velocities:
-    print(velocity)
+for file in os.listdir(dir_path):
+    file_path = os.path.join(os.getcwd(), dir_path, file)
+    print(file_path)
+    track_file = pd.read_csv(file_path)
+    print(track_file.columns)
+    velocities = calculate_velocity(track_file, pid)
+    omegas = calculate_omega(track_file)
+
+    print("Velocity: ")
+    printlines(velocities, 0, 20)
+
+    print("Omega: ")
+    printlines(omegas, 0, 20)
+
+    # write out the results here
