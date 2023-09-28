@@ -55,6 +55,14 @@ for file in os.listdir(dir_path):
 
     # write out the results here
 
+    result_df = pd.DataFrame({
+        'velocity': velocities,
+        'omega': omegas
+    })
+    result_path = os.path.join(result_path, file)
+    result_df.to_csv(result_path)
+
+
 
 
 

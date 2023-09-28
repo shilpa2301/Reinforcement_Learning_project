@@ -59,12 +59,11 @@ import pandas as pd
 import os
 
 print(os.getcwd())
-dir_path = os.path.join('Data', 'First_Set_for_imitation_Learning', 'interpolated_8_clockwise')
-result_path = os.path.join('Data', 'First_Set_for_imitation_Learning', 'results')
+dir_path = os.path.join(os.getcwd(), 'Data', 'First_Set_for_imitation_Learning', 'interpolated_8_clockwise')
 
 pid = PID(1, 0, 0)  # Just example values; tune them according to your needs
 
-for file in os.listdir(dir_path):
+for index, file in enumerate(os.listdir(dir_path)):
     file_path = os.path.join(os.getcwd(), dir_path, file)
     print(file_path)
     track_file = pd.read_csv(file_path)
@@ -79,3 +78,11 @@ for file in os.listdir(dir_path):
     printlines(omegas, 0, 20)
 
     # write out the results here
+
+    result_df = pd.DataFrame({
+        'velocity': velocities,
+        'omega': omegas
+    })
+    result_path = os.path.join('Data', 'First_Set_for_imitation_Learning', "results", str(index) + ".csv")
+    result_df.to_csv(result_path, index=False)
+
